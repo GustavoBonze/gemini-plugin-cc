@@ -1,0 +1,14 @@
+{
+  "name": "gustavobonze-gemini",
+  "owner": {
+    "name": "Gustavo Bonze",
+    "url": "https://github.com/gustavoBonze"
+  },
+  "plugins": [
+    {
+      "name": "gemini",
+      "source": "./plugins/gemini",
+      "description": "Use Gemini from Claude Code to review code or delegate tasks."
+    }
+  ]
+}

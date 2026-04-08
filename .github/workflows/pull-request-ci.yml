@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Test (Node.js ${{ matrix.node-version }})
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ["18", "20", "22"]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Validate JSON files
+        run: |
+          node -e "JSON.parse(require('fs').readFileSync('plugins/gemini/.claude-plugin/plugin.json','utf8')); console.log('plugin.json OK')"
+          node -e "JSON.parse(require('fs').readFileSync('plugins/gemini/hooks/hooks.json','utf8')); console.log('hooks.json OK')"
+          node -e "JSON.parse(require('fs').readFileSync('.claude-plugin/marketplace.json','utf8')); console.log('marketplace.json OK')"
+          node -e "JSON.parse(require('fs').readFileSync('plugins/gemini/schemas/review-output.schema.json','utf8')); console.log('schema OK')"
+
+      - name: Run tests
+        run: node --test tests/*.test.mjs
